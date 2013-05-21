@@ -1,0 +1,48 @@
+<html>
+<head>
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript"> 
+//var userID =  sessionStorage.getItem('userIDp1')+sessionStorage.getItem('userIDp2');
+var userID =   localStorage.userID;
+console.log(userID);
+document.addEventListener("keydown", function(e) {
+  if (e.keyCode == 13) {
+    toggleFullScreen();
+  }
+}, false);
+</script>
+
+<!--<script src="js/lib/jquery-1.9.1.js"></script>-->
+<script src="js/lib/jquery-1.9.1.js"></script>
+<script src="js/lib/json2.js"> </script>
+<script src="js/lib/Polygons.js"></script>
+<script type="text/javascript" src="js/game/TheMemory.js"> </script>
+<script type="text/javascript" src="js/game/TwoObjects.js"> </script>
+<script type="text/javascript" src="js/game/AsFastYouCan.js"> </script>
+<script type="text/javascript" src="js/Results.js"> </script>
+<script type="text/javascript" src="js/Utils.js"> </script>
+<script type="text/javascript" src="js/Extra.js"> </script>
+<script type="text/javascript" src="js/Config.js"> </script>
+<script type="text/javascript" src="js/Main.js"> </script>
+<title> Experiement App</title>
+</head>
+<body>
+
+<div class="protector"></div>
+
+<div class="main-container">
+<div class="main">
+<canvas class = "canvas" id="canvas" width="600" height="600"></canvas>
+
+<div> <div class="button nextButton disabled">Next </div> </div>
+<div> <div class="button resultsButton disabled">Results </div> </div>
+
+</div>
+</div>
+
+<div class="protectorBottom"> </div>
+<div class="footer-container"> </div>
+
+</body>
+
+</html>

@@ -1,0 +1,249 @@
+<html>
+<header>
+<style>
+body{
+font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+font-size:12px;
+background:#222;
+}
+p, h1, form, button{border:0; margin:0; padding:0;}
+.spacer{clear:both; height:1px;border-top:solid 1px #b7ddf2; margin-bottom:10px;}
+/* ----------- My Form ----------- */
+.myform{
+margin:0 auto;
+width:520px;
+padding:14px;
+}
+
+/* ----------- stylized ----------- */
+#stylized{
+border:solid 2px #b7ddf2;
+background:#ebf4fb;
+}
+#stylized h1 {
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+#stylized p{
+font-size:11px;
+color:#666666;
+margin-bottom:20px;
+border-bottom:solid 1px #b7ddf2;
+padding-bottom:10px;
+}
+#stylized label{
+display:block;
+font-weight:bold;
+/*text-align:right;*/
+width:180px;
+float:left;
+}
+#stylized .small{
+color:#666666;
+display:block;
+font-size:11px;
+font-weight:normal;
+/*text-align:right;*/
+width:180px;
+}
+#stylized input,textarea{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 30px 20px;
+}
+
+#stylized div input{
+font-size:12px;
+width:20px;
+margin:0;
+}
+
+#stylized .optInline{
+float:left;
+width:90px;
+margin:2px 0 40px 5px;
+margin-left:20px;
+}
+
+#stylized .chkInline{
+float:left;
+width:40px;
+margin:2px 0 40px 20px;
+}
+
+#stylized .required  {
+color:red;
+font-size:15px;
+}
+
+#stylized button{
+clear:both;
+margin-left:200px;
+width:125px;
+height:31px;
+background:#666666 url(img/button.png) no-repeat;
+text-align:center;
+line-height:31px;
+color:#FFFFFF;
+font-size:11px;
+font-weight:bold;
+}
+
+#macsContainer{
+margin-top:-10px;
+visibility:hidden;
+display:none;
+background-color:rgba(60,20,20,0.2);
+color:grey;
+}
+</style>
+<script src="js/lib/jquery-1.9.1.js"></script>
+<script>
+
+$(document).ready(function() {
+ $("#form").submit(function() {
+event.preventDefault();
+
+//alert('You submitted the form!');
+var fd = new FormData(this);
+//alert(fd.email);
+  // do the extra stuff here
+$.ajax({
+	 type: "POST",
+	 url: "php/form.php",
+	 data:fd,
+	processData: false,  // tell jQuery not to process the data
+	contentType: false,
+	success:
+	function(data) {
+	data = $.trim(data); //leading whithespace in the PHP responce :!
+	/*console.log(data);
+	var id = ""
+		for (var key in data) {
+			if (data.hasOwnProperty(key)) {
+				if (key >=16 && key<=39) {
+					id = id+data[key];
+				}
+				console.log(data[key]+" "+key);
+		}
+}*/
+
+
+
+		if(typeof(Storage)!=="undefined")
+			  { 
+			  localStorage.userID=data;
+			  }else{
+			  }
+		window.location.replace("exp.html");
+		
+      }
+  })
+
+ })
+})
+
+function doSomething(elem) {
+	//console.log('sdfsd');
+	var value = elem.checked;
+	var elements = document.getElementsByClassName("macs");
+	
+	if (value) {
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].removeAttribute("disabled");
+			}
+			document.getElementById("macsContainer").style.backgroundColor="rgba(0,200,0,0.2)";
+			document.getElementById("macsContainer").style.color="black";
+			document.getElementById("macsContainer").style.visibility="visible";
+			document.getElementById("macsContainer").style.display="block";
+	} else {
+			for (var i = 0; i < elements.length; i++) {
+				elements[i].setAttribute("disabled");
+			}
+			document.getElementById("macsContainer").style.backgroundColor="rgba(60,20,20,0.2)";
+			document.getElementById("macsContainer").style.color="grey";
+			document.getElementById("macsContainer").style.visibility="hidden";
+			document.getElementById("macsContainer").style.display="none";
+
+	}
+
+}
+
+</script>
+
+</header>
+<body>
+<div id="stylized" class="myform">
+
+
+<form id="form" name="form" enctype="multipart/form-data"> <!--action="form.php" type="POST"-->
+<h1>Computer Human Interaction</h1>
+<p>Please fill the details below in order to start the experiment</p>
+
+
+<label>Your Age: <span class="required">*</span></label>
+<input type="number" name="age" min="10" max="100" required />
+<div class="spacer"></div>
+
+<label>Gender <span class="required ">*</span> </label>
+<div class='optInline'> <input class='inline' type="radio" name="sex" value="male"   /> Male </div>
+<div class='optInline'> <input class='inline' type="radio" name="sex" value="female"/> Female </div>
+<div class="spacer"></div>
+
+
+<label>Impairment Type <span class="required ">*</span> </label>
+<textarea id = 'ImpairmentType' type="text" name="ImpairmentType" id="ImpairmentType"   /></textarea>
+<div class="spacer"></div>
+
+
+<label>Impairment Classification:</label>
+<div class='optInline'> <input class='inline' type="checkbox" name="ic1" value="motor" /> motor </div>
+<div class='optInline'> <input class='inline' type="checkbox" name="ic2" value="cognition"/> cognition  </div>
+<div class='optInline'> <input class='inline' type="checkbox" name="ic3" value="perception"/> perception </div>
+<div class="spacer"></div>
+
+
+<label>Is It Cerebral Palsy? </label>
+<div class='optInline'> <input onclick="doSomething(this)" class='inline' type="checkbox" name="cp" value="yes"/> Yes </div>
+<div class="spacer"></div>
+
+<div id="macsContainer">
+<label>MACS Impairment Level: </label>
+<div class='chkInline'> <input disabled class='inline macs' type="radio" name="macs" value="1"/> I </div>
+<div class='chkInline'> <input disabled class='inline macs' type="radio" name="macs" value="2"/> II </div>
+<div class='chkInline'> <input disabled  class='inline macs' type="radio" name="macs" value="3"/> III </div>
+<div class='chkInline'> <input disabled class='inline macs' type="radio" name="macs" value="4"/> V </div>
+<div class='chkInline'> <input disabled  class='inline macs' type="radio" name="macs" value="5"/> IV </div>
+<div class="spacer"></div>
+</div>
+<label>Upload File 
+<span class="small">PDF only</span>
+
+</label>
+<input id="file" name="file" class="element file" type="file" >
+<div class="spacer"></div>
+
+
+<label>I Do Agree To Do The Experiment <span class="required ">*</span> <span class="small"><a href="files/MACS - Arabic.pdf">MACS(ar) </a> - <a href="files/PIS - Arabic.pdf">PIS(ar)</a></span> </label>
+<div class='optInline'> <input class='inline' type="checkbox" name="agree" value="Agreed" required > I Agree </div>
+<div class="spacer"></div>
+
+<label>Email
+<span class="small">Add a valid address</span>
+</label>
+<input type="email" name="email" id="email" />
+<div class="spacer"></div>
+
+<button type="submit">Start</button>
+
+</form>
+
+
+
+</div>
+</body>
+</html>

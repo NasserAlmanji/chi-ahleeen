@@ -1,0 +1,322 @@
+﻿<html>
+<head>
+<link href="../css/style.css" rel="stylesheet" type="text/css"> 
+<style>
+body{
+font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+font-size:12px;
+background:#222;
+}
+p, h1, form, button{border:0; margin:0; padding:0; width:400px;}
+.spacer{clear:both; height:1px;border-top:solid 1px #abcaab; margin-bottom:10px; width:400px;}
+/* ----------- My Form ----------- */
+.myform{
+margin:0 auto;
+width:400px;
+padding:14px;
+display:inline;
+float:left;
+
+}
+
+/* ----------- stylized ----------- */
+#stylized{
+border:solid 5px grey;
+background:#ebfff4;
+}
+#stylized h1 {
+font-size:14px;
+font-weight:bold;
+margin-bottom:8px;
+}
+#stylized p{
+font-size:11px;
+color:#666666;
+margin-bottom:20px;
+border-bottom:solid 1px #b7ddf2;
+padding-bottom:10px;
+}
+#stylized label{
+font-size:14px;
+color:black;
+display:block;
+font-weight:bold;
+/*text-align:right;*/
+width:180px;
+float:left;
+}
+#stylized label.title{
+color:blue;
+font-size:22px;
+}
+#stylized .small{
+color:#666666;
+display:block;
+font-size:11px;
+font-weight:normal;
+/*text-align:right;*/
+width:180px;
+}
+#stylized input,textarea{
+float:left;
+font-size:16px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:100px;
+margin:2px 0 30px 20px;
+}
+
+#stylized div input{
+font-size:12px;
+width:20px;
+margin:0;
+}
+
+#stylized .optInline{
+float:left;
+width:90px;
+margin:2px 0 40px 5px;
+margin-left:20px;
+}
+
+#stylized .chkInline{
+float:left;
+width:40px;
+margin:2px 0 40px 20px;
+}
+
+#stylized .required  {
+color:red;
+font-size:15px;
+}
+
+#stylized button, #testBut3{
+float:right;
+margin-left:10px;
+width:125px;
+height:31px;
+background:#669966;
+text-align:center;
+line-height:31px;
+color:#FFFFFF;
+font-size:11px;
+font-weight:bold;
+}
+
+#macsContainer{
+margin-top:-10px;
+visibility:hidden;
+display:none;
+background-color:rgba(60,20,20,0.2);
+color:grey;
+}
+
+.canvas {
+display:inline;
+float:left;
+border:solid 5px grey;
+margin-right:-5px;
+}
+
+.main {
+width:1100px;
+}
+</style>
+<script src="../js/lib/jquery-1.9.1.js"></script>
+
+
+
+
+<script src="../js/lib/json2.js"> </script>
+<script src="../js/lib/Polygons.js"></script>
+<script type="text/javascript" src="TheMemoryConf.js"> </script>
+<script type="text/javascript" src="../js/Config.js"> </script>
+<script type="text/javascript" src="../js/Utils.js"> </script>
+ <title> Configuration </title>
+
+<script type="text/javascript">
+		var leave = 0;
+		var canvas;
+		var context;
+		var htmlX = null;
+		var htmlY = null;
+		var htmlTimeStamp = null;
+		
+$(document).ready(function() {
+
+
+
+
+$.ajax({
+				type:"POST",
+				url:"../php/conf.php",
+				data: {loadExpMeta:'Exp3'},
+				success : function(data){
+					data = $.trim(data); //leading whithespace in the PHP responce :!
+					
+					var jsonData = JSON.parse(data);
+					
+					$("#speed").val(jsonData.speedTime);
+					$("#sizeSides").val(jsonData.sizeSides);
+					$("#stopTime").val(jsonData.stopTime);
+					$("#numTries").val(jsonData.numTries);
+					$("#minSides").val(jsonData.minSides);
+					$("#maxSides").val(jsonData.maxSides);
+				}
+})
+				
+				
+$("#testBut3").click(function() {
+console.log("aaaa");
+leave++;
+				canvas = document.getElementById('canvas');
+				context = canvas.getContext('2d');
+TheMemory();
+})
+
+$("#form3").submit(function() {
+event.preventDefault();
+
+var fd = new FormData(this);
+
+$.ajax({
+	 type: "POST",
+	 url: "../php/conf.php",
+	 data:fd,
+	processData: false,  // tell jQuery not to process the data
+	contentType: false,
+	success:
+	function(data) {
+	data = $.trim(data); //leading whithespace in the PHP responce :!
+	console.log(data);
+						alert("You saved the data");
+
+	/*var id = ""
+		for (var key in data) {
+			if (data.hasOwnProperty(key)) {
+				if (key >=16 && key<=39) {
+					id = id+data[key];
+				}
+				console.log(data[key]+" "+key);
+		}
+}*/
+
+		
+      }
+  })
+
+})
+  // Handler for .load() called.
+
+})
+</script>
+
+</head>
+
+
+<body>
+
+<div class="protector"></div>
+
+<div class="main-container">
+<div class="main">
+<canvas class = "canvas" id="canvas" width="600" height="600"></canvas>
+<div id="stylized" class="myform">
+
+<form id="form1" name="form" enctype="multipart/form-data"> <!--action="form.php" type="POST"-->
+
+
+<label class='title'>Configuration - Experiement #1</label>
+<div class="spacer"></div>
+
+<label>Number Of Click <span class="small">The number of iterations (tries) #note that comparisons = tries-1 [Min:2 - Max:50]</span></label>
+<input id="numTries" type="number" name="numTries" value="3" min="2" max="50" required />
+<div class="spacer"></div>
+
+<label>Minimum Polygon <span class="small">Minimum Sides Of Polygon (default is 3 which is triangle) [Min:3 - Max:11]</span></label>
+<input id="minSides" type="number" name="minSides" value="3" min="3" max="12" required />
+<div class="spacer"></div>
+
+<label>Maximum Polygon<span class="small">Maximum Sides Of Polygon (default is 8 which is octagon) [Min:4 - Max:12]</span></label>
+<input id="maxSides" type="number" name="maxSides" value="5" min="4" max="12" required />
+<div class="spacer"></div>
+
+<label>Side Size<span class="small">Determines the size of the side of the Polygon in pixels (default is 100) [Min:30 - Max:300]</span></label>
+<input id="sizeSides" type="number" name="sizeSides" value="100" min="30" max="300" required />
+<div class="spacer"></div>
+
+
+<label>Stoppage Time<span class="small">Time where shape waits in the middle before proceding its way in milliseconds (default is 1000) [Min:200 - Max:5000]</span></label>
+<input  id="stopTime" type="number" name="stopTime" value="1000" min="200" max="5000" required />
+<div class="spacer"></div>
+
+<label>Speed<span class="small">The speed of the polygon as it sweeps the canvas from left to right in pixels/second (default is 2000) [Min:300 - Max:5000]</span></label>
+<input id="speed" type="number" name="speedTime" min="300" value="2000" max="5000" required />
+<div class="spacer"></div>
+
+<label>Polygon Color<span class="small">Choose the color of the polygons</span></label>
+<!--<input type="color" name="colorPoly" required />-->
+<div class="spacer"></div>
+
+<div id="testBut3">Test</div>
+<input type="hidden" value="Exp3" name="ExpID"/>
+<button type="submit">Save</button>
+
+</form>
+
+
+
+<form id="form3" name="form" enctype="multipart/form-data"> <!--action="form.php" type="POST"-->
+<!--<h1>Computer Human Interaction</h1>
+<p>Please fill the details below in order to start the experiment</p>-->
+
+
+<label class='title'>Configuration - Experiement #3</label>
+<div class="spacer"></div>
+
+<label>Number Of Iterations <span class="small">The number of iterations (tries) #note that comparisons = tries-1 [Min:2 - Max:50]</span></label>
+<input id="numTries" type="number" name="numTries" value="3" min="2" max="50" required />
+<div class="spacer"></div>
+
+<label>Minimum Polygon <span class="small">Minimum Sides Of Polygon (default is 3 which is triangle) [Min:3 - Max:11]</span></label>
+<input id="minSides" type="number" name="minSides" value="3" min="3" max="12" required />
+<div class="spacer"></div>
+
+<label>Maximum Polygon<span class="small">Maximum Sides Of Polygon (default is 8 which is octagon) [Min:4 - Max:12]</span></label>
+<input id="maxSides" type="number" name="maxSides" value="5" min="4" max="12" required />
+<div class="spacer"></div>
+
+<label>Side Size<span class="small">Determines the size of the side of the Polygon in pixels (default is 100) [Min:30 - Max:300]</span></label>
+<input id="sizeSides" type="number" name="sizeSides" value="100" min="30" max="300" required />
+<div class="spacer"></div>
+
+
+<label>Stoppage Time<span class="small">Time where shape waits in the middle before proceding its way in milliseconds (default is 1000) [Min:200 - Max:5000]</span></label>
+<input  id="stopTime" type="number" name="stopTime" value="1000" min="200" max="5000" required />
+<div class="spacer"></div>
+
+<label>Speed<span class="small">The speed of the polygon as it sweeps the canvas from left to right in pixels/second (default is 2000) [Min:300 - Max:5000]</span></label>
+<input id="speed" type="number" name="speedTime" min="300" value="2000" max="5000" required />
+<div class="spacer"></div>
+
+<label>Polygon Color<span class="small">Choose the color of the polygons</span></label>
+<!--<input type="color" name="colorPoly" required />-->
+<div class="spacer"></div>
+
+<div id="testBut3">Test</div>
+<input type="hidden" value="Exp3" name="ExpID"/>
+<button type="submit">Save</button>
+
+</form>
+
+
+</div>
+</div>
+</div>
+
+<div class="protectorBottom"> </div>
+<div class="footer-container"> </div>
+
+</body>
+
+</html>
